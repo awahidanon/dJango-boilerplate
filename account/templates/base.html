@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <header class="navbar bg-base-200 shadow-md p-4">
+        <div class="flex-1">
+            <a class="btn btn-ghost text-xl" href="#">Starter</a>
+        </div>
+        <div class="flex-none">
+            {% if request.user.is_authenticated %}
+                <ul class="menu menu-horizontal px-1">
+                    <li {% if section == "home" %}class="bg-primary text-white rounded-lg"{% endif %}>
+                        <a href="{% url "home" %}">Home</a>
+                    </li>
+                </ul>
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-10 rounded-full">
+                            <img src="https://placehold.co/40" alt="User Avatar">
+                        </div>
+                    </label>
+                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                        <li class="p-2">Hello {{ request.user.first_name|default:request.user.username }}</li>
+                        <li>
+                            <form action="{% url "logout" %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-error btn-sm w-full">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            {% else %}
+                <a href="{% url "login" %}" class="btn btn-primary">Log-in</a>
+            {% endif %}
+        </div>
+    </header>
+    <main class="container mx-auto p-6">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>
